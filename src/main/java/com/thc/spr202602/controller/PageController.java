@@ -35,6 +35,15 @@ public class PageController {
         return "add";
     }
 
+    @RequestMapping("/addString")
+    public String addString(String a, String b, Model model){
+        System.out.println("addString!!!! : " + a + "//" + b);
+        String c = a + b;
+        model.addAttribute("c", c);
+        return "string";
+    }
+
+    //Rest Controller
     @ResponseBody //이거를 붙이면 REST CTRL 이 되는거!! 페이지 이동 없음!!
     @RequestMapping("/add2")
     public Map<String, Object> add2(int a, int b){
@@ -43,6 +52,15 @@ public class PageController {
         map.put("sum", sum);
         map.put("a", a);
         map.put("b", b);
+        return map;
+    }
+
+    @ResponseBody
+    @RequestMapping("/multiple")
+    public Map<String, Object> multiple(@RequestParam int a, @RequestParam int b){
+        Map<String, Object> map = new HashMap<>();
+        int result = a * b;
+        map.put("result", result);
         return map;
     }
 }

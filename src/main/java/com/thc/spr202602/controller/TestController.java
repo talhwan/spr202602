@@ -1,4 +1,4 @@
-package com.thc.spr202602;
+package com.thc.spr202602.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
