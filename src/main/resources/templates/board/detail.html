@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+</head>
+<body>
+
+id : <input type="text" name="id" id="id"/> <br />
+title : <input type="text" name="title" id="title"/> <br />
+content : <input type="text" name="content" id="content"/> <br />
+<button onclick="detail_board()">detail</button>
+<button onclick="update_board()">update</button>
+<button onclick="delete_board()">delete</button>
+<script>
+
+    function delete_board() {
+        $.ajax({
+            url: '/api/board/delete',
+            method: 'GET',
+            data : {
+                id : $('#id').val()
+            },
+            success: function (data, status, xhr) {
+                alert("data : " + JSON.stringify(data));
+            },
+            error: function (data, status, err) {
+            },
+            complete: function () {
+            }
+        });
+    }
+    function update_board() {
+        $.ajax({
+            url: '/api/board/update',
+            method: 'GET',
+            data : {
+                id : $('#id').val()
+                , title : $('#title').val()
+                , content : $('#content').val()
+            },
+            success: function (data, status, xhr) {
+                alert("data : " + JSON.stringify(data));
+            },
+            error: function (data, status, err) {
+            },
+            complete: function () {
+            }
+        });
+    }
+    function detail_board() {
+        $.ajax({
+            url: '/api/board/detail',
+            method: 'GET',
+            data : {
+                id : $('#id').val()
+            },
+            success: function (data, status, xhr) {
+                alert("data : " + JSON.stringify(data));
+                let board = data["data"];
+                $("#title").val(board["title"]);
+                $("#content").val(board["content"]);
+            },
+            error: function (data, status, err) {
+            },
+            complete: function () {
+            }
+        });
+    }
+</script>
+</body>
+</html>
