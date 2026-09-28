@@ -27,6 +27,13 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    //domain
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    //db
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.2.0' //db
+
 }
 
 tasks.named('test') {

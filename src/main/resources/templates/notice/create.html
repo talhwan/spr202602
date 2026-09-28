@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+  <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+</head>
+<body>
+
+NOTICE CREATE <br />
+title : <input class="input_create" type="text" name="title" id="create_notice_title" /> <br/>
+content : <input class="input_create" type="text" name="content" id="create_notice_content" /> <br/>
+author : <input class="input_create" type="text" name="author" id="create_notice_author" /> <br/>
+
+<button onclick="create_notice()">Create</button>
+
+<script>
+  function create_notice() {
+    let _data = {};
+    let input_create = $(".input_create");
+    for(let each of input_create) {
+      _data[$(each).attr("name")] = $(each).val();
+    }
+    $.ajax({
+      url: '/api/notice/create',
+      method: 'POST',
+      contentType: 'application/json; charset=utf-8',
+      data : JSON.stringify(_data),
+      success: function (data, status, xhr) {
+        alert("data : " + JSON.stringify(data));
+      },
+      error: function (data, status, err) {
+      },
+      complete: function () {
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
