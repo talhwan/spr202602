@@ -18,11 +18,10 @@ content : <input type="text" name="content" id="content"/> <br />
 
     function delete_board() {
         $.ajax({
-            url: '/api/board/delete',
-            method: 'GET',
-            data : {
-                id : $('#id').val()
-            },
+            url: '/api/board',
+            method: 'DELETE',
+            contentType: 'application/json; charset=utf-8',
+            data : $('#id').val(),
             success: function (data, status, xhr) {
                 alert("data : " + JSON.stringify(data));
             },
@@ -34,13 +33,14 @@ content : <input type="text" name="content" id="content"/> <br />
     }
     function update_board() {
         $.ajax({
-            url: '/api/board/update',
-            method: 'GET',
-            data : {
+            url: '/api/board',
+            method: 'PUT',
+            contentType: 'application/json; charset=utf-8',
+            data : JSON.stringify({
                 id : $('#id').val()
                 , title : $('#title').val()
                 , content : $('#content').val()
-            },
+            }),
             success: function (data, status, xhr) {
                 alert("data : " + JSON.stringify(data));
             },
@@ -52,14 +52,14 @@ content : <input type="text" name="content" id="content"/> <br />
     }
     function detail_board() {
         $.ajax({
-            url: '/api/board/detail',
+            url: '/api/board',
             method: 'GET',
             data : {
                 id : $('#id').val()
             },
             success: function (data, status, xhr) {
                 alert("data : " + JSON.stringify(data));
-                let board = data["data"];
+                let board = data;
                 $("#title").val(board["title"]);
                 $("#content").val(board["content"]);
             },

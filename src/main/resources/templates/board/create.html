@@ -10,16 +10,19 @@
 
 title : <input type="text" name="title" id="title"/>
 content : <input type="text" name="content" id="content"/>
+author : <input type="text" name="author" id="author"/>
 <button onclick="create_board()">submit</button>
 <script>
     function create_board() {
         $.ajax({
-            url: '/api/board/create',
-            method: 'GET',
-            data : {
+            url: '/api/board',
+            method: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data : JSON.stringify({
                 title : $('#title').val()
                 , content : $('#content').val()
-            },
+                , author : $('#author').val()
+            }),
             success: function (data, status, xhr) {
                 alert("data : " + JSON.stringify(data));
             },
