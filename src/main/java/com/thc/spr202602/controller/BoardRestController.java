@@ -1,6 +1,7 @@
 package com.thc.spr202602.controller;
 
 import com.thc.spr202602.domain.Board;
+import com.thc.spr202602.dto.BoardDto;
 import com.thc.spr202602.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +18,9 @@ public class BoardRestController {
     final BoardService boardService;
 
     @PostMapping("")
-    public Map<String, Object> create(@RequestBody Map<String, Object> param){
-        Long id = boardService.create(param);
-        int resultCode = 0;
-        Map<String, Object> result_map = new HashMap<>();
-        if(id != null && id > 0){
-            resultCode = 200;
-        }
-        result_map.put("message", "success");
-        result_map.put("resultCode", resultCode);
-        return result_map;
+    public BoardDto.CreateResDto create(@RequestBody BoardDto.CreateReqDto param){
+        BoardDto.CreateResDto resDto = boardService.create(param);
+        return resDto;
     }
     @PutMapping("")
     public void update(@RequestBody Map<String, Object> param){
