@@ -1,6 +1,7 @@
 package com.thc.spr202602.domain;
 
 import com.thc.spr202602.dto.BoardDto;
+import com.thc.spr202602.dto.DefaultDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +27,14 @@ public class Board extends AuditingFileds {
     public static Board of(String title, String content, String author) {
         return new Board(false, title, content, author);
     }
-    public BoardDto.CreateResDto toCreateResDto() {
-        return BoardDto.CreateResDto.builder().id(getId()).build();
+    public DefaultDto.CreateResDto toCreateResDto() {
+        return DefaultDto.CreateResDto.builder().id(getId()).build();
     }
+    public void update(BoardDto.UpdateReqDto param) {
+        if(param.getDeleted() != null){ setDeleted(param.getDeleted()); }
+        if(param.getTitle() != null){ setTitle(param.getTitle()); }
+        if(param.getContent() != null){ setContent(param.getContent()); }
+        if(param.getAuthor() != null){ setAuthor(param.getAuthor()); }
+    }
+
 }

@@ -7,17 +7,31 @@
     <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
 </head>
 <body>
-
+<select id="search_deleted">
+    <option value="false">일반</option>
+    <option value="true">삭제됨</option>
+</select>
+<input id="search_title" type="text" placeholder="제목 검색"/>
 LIST
+<div id="div_list">
+</div>
 <button onclick="list_board()">list</button>
 <script>
     function list_board() {
         $.ajax({
             url: '/api/board/list',
             method: 'GET',
-            data : {},
+            data : {
+                deleted: $("#search_deleted").val()
+                , title: $("#search_title").val()
+            },
             success: function (data, status, xhr) {
-                alert("data : " + JSON.stringify(data));
+                //alert("data : " + JSON.stringify(data));
+                $("#div_list").html("");
+                let list = data;
+                for(let each of list) {
+                    $("#div_list").append("<div>"+each["id"] + "//" + each["title"]+"</div>");
+                }
             },
             error: function (data, status, err) {
             },

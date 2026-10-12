@@ -21,7 +21,9 @@ content : <input type="text" name="content" id="content"/> <br />
             url: '/api/board',
             method: 'DELETE',
             contentType: 'application/json; charset=utf-8',
-            data : $('#id').val(),
+            data : JSON.stringify({
+                id : $('#id').val()
+            }),
             success: function (data, status, xhr) {
                 alert("data : " + JSON.stringify(data));
             },

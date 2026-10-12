@@ -2,8 +2,12 @@ package com.thc.spr202602.controller;
 
 import com.thc.spr202602.domain.Board;
 import com.thc.spr202602.dto.BoardDto;
+import com.thc.spr202602.dto.DefaultDto;
 import com.thc.spr202602.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,25 +22,26 @@ public class BoardRestController {
     final BoardService boardService;
 
     @PostMapping("")
-    public BoardDto.CreateResDto create(@RequestBody BoardDto.CreateReqDto param){
-        BoardDto.CreateResDto resDto = boardService.create(param);
-        return resDto;
+    public ResponseEntity<DefaultDto.CreateResDto> create(@RequestBody BoardDto.CreateReqDto param){
+        return ResponseEntity.status(HttpStatus.CREATED).body(boardService.create(param));
     }
     @PutMapping("")
-    public void update(@RequestBody Map<String, Object> param){
+    public ResponseEntity<Void> update(@RequestBody BoardDto.UpdateReqDto param){
         boardService.update(param);
+        return ResponseEntity.ok().build();
     }
     @DeleteMapping("")
-    public void delete(@RequestBody Long id){
-        boardService.delete(id);
+    public ResponseEntity<Void> delete(@RequestBody BoardDto.UpdateReqDto param){
+        boardService.delete(param);
+        return ResponseEntity.ok().build();
     }
     @GetMapping("")
-    public Board get(@RequestParam Long id){
-        return boardService.detail(id);
+    public ResponseEntity<BoardDto.DetailResDto> get(DefaultDto.DetailReqDto param){
+        return ResponseEntity.ok(boardService.detail(param));
     }
     @GetMapping("/list")
-    public List<Board> list(){
-        return boardService.list();
+    public ResponseEntity<List<BoardDto.DetailResDto>> list(BoardDto.ListReqDto param){
+        return ResponseEntity.ok(boardService.list(param));
     }
 
 }

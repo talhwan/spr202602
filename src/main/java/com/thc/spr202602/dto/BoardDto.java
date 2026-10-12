@@ -2,6 +2,9 @@ package com.thc.spr202602.dto;
 
 import com.thc.spr202602.domain.Board;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDateTime;
 
 public class BoardDto {
 
@@ -15,8 +18,22 @@ public class BoardDto {
             return Board.of(getTitle(), getContent(), getAuthor());
         }
     }
-    @Setter @Getter @Builder @NoArgsConstructor @AllArgsConstructor
-    public static class CreateResDto{
-        Long id;
+    @Setter @Getter @SuperBuilder @NoArgsConstructor @AllArgsConstructor
+    public static class UpdateReqDto extends DefaultDto.UpdateReqDto{
+        String title;
+        String content;
+        String author;
+    }
+    @Setter @Getter @SuperBuilder @NoArgsConstructor @AllArgsConstructor
+    public static class DetailResDto extends DefaultDto.DetailResDto{
+        String title;
+        String content;
+        String author;
+    }
+
+    @Setter @Getter @SuperBuilder @NoArgsConstructor @AllArgsConstructor
+    public static class ListReqDto extends DefaultDto.ListReqDto{
+        String title;
+        String author;
     }
 }
