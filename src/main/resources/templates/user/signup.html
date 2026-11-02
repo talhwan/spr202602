@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+</head>
+<body>
+
+username : <input type="text" name="username" class="input_create" id="input_username"/> <br/>
+<button onclick="duplicate_username()">중복확인</button>
+password : <input type="text" name="password" class="input_create"/> <br/>
+name : <input type="text" name="name" class="input_create"/> <br/>
+<button onclick="signup_user()">submit</button>
+<script>
+    function duplicate_username() {
+        $.ajax({
+            url: '/api/user/username',
+            method: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            data : {
+                username: $('#input_username').val()
+            },
+            success: function (data, status, xhr) {
+                //alert("data : " + JSON.stringify(data));
+                let exist = data["exist"];
+                if (exist) {
+                    alert("중복된 아이디 입니다.");
+                    $('#input_username').val("");
+                } else {
+                    alert("사용 가능한 아이디 입니다.");
+                    $('#input_username').attr("readonly", true);
+                }
+            },
+            error: function (data, status, err) {
+            },
+            complete: function () {
+            }
+        });
+    }
+    function signup_user() {
+
+        let _param = {};
+        let input_create = $(".input_create");
+        for(let each of input_create){
+            _param[$(each).attr("name")] = $(each).val();
+        }
+
+        $.ajax({
+            url: '/api/user/signup',
+            method: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data : JSON.stringify(_param),
+            success: function (data, status, xhr) {
+                alert("data : " + JSON.stringify(data));
+            },
+            error: function (data, status, err) {
+            },
+            complete: function () {
+            }
+        });
+    }
+</script>
+</body>
+</html>
