@@ -14,8 +14,10 @@ public class BoardDto {
         String content;
         String author;
 
+        Long userId;
+
         public Board toEntity() {
-            return Board.of(getTitle(), getContent(), getAuthor());
+            return Board.of(getUserId(), getTitle(), getContent(), getAuthor());
         }
     }
     @Setter @Getter @SuperBuilder @NoArgsConstructor @AllArgsConstructor
@@ -26,6 +28,7 @@ public class BoardDto {
     }
     @Setter @Getter @SuperBuilder @NoArgsConstructor @AllArgsConstructor
     public static class DetailResDto extends DefaultDto.DetailResDto{
+        Long userId;
         String title;
         String content;
         String author;
@@ -33,6 +36,7 @@ public class BoardDto {
 
     @Setter @Getter @SuperBuilder @NoArgsConstructor @AllArgsConstructor
     public static class ListReqDto extends DefaultDto.ListReqDto{
+        Long userId;
         String title;
         String author;
     }

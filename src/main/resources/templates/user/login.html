@@ -26,7 +26,12 @@ password : <input type="password" name="password" class="input_create"/> <br/>
             contentType: 'application/json; charset=utf-8',
             data : JSON.stringify(_param),
             success: function (data, status, xhr) {
-                alert("data : " + JSON.stringify(data));
+                //alert("data : " + JSON.stringify(data));
+                let id = data["id"];
+                if(Number(id) > 0){
+                    alert("로그인 성공!");
+                    localStorage.setItem("userId", id);
+                }
             },
             error: function (data, status, err) {
             },

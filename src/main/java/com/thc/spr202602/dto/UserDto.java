@@ -37,7 +37,6 @@ public class UserDto {
     @Setter @Getter @SuperBuilder @NoArgsConstructor @AllArgsConstructor
     public static class DetailResDto extends DefaultDto.DetailResDto{
         String username;
-        String password;
         String email;
         String name;
         LocalDate birth;
@@ -46,6 +45,7 @@ public class UserDto {
     @Setter @Getter @SuperBuilder @NoArgsConstructor @AllArgsConstructor
     public static class ListReqDto extends DefaultDto.ListReqDto{
         String name;
+        String email;
         LocalDate birth;
     }
 }

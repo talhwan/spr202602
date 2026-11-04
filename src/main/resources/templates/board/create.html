@@ -14,6 +14,12 @@ author : <input type="text" name="author" id="author"/>
 <button onclick="create_board()">submit</button>
 <script>
     function create_board() {
+        let userId = localStorage.getItem("userId");
+        if(userId == null || userId === "null" || userId === "undefined") {
+            alert("Please login!!");
+            return false;
+        }
+
         $.ajax({
             url: '/api/board',
             method: 'POST',
@@ -22,6 +28,7 @@ author : <input type="text" name="author" id="author"/>
                 title : $('#title').val()
                 , content : $('#content').val()
                 , author : $('#author').val()
+                , userId : userId
             }),
             success: function (data, status, xhr) {
                 alert("data : " + JSON.stringify(data));

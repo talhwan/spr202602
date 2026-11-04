@@ -11,21 +11,22 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @Entity
 public class Board extends AuditingFileds {
+    @Setter Long userId;
     @Setter String title;
     @Setter String content;
     @Setter String author;
 
-    //생성자를 어디서도 못쓰게 막아버리고 싶은데, private는 안되어서, protected로!!
     protected Board(){}
-    private Board(Boolean deleted, String title, String content, String author) {
+    private Board(Boolean deleted, Long userId, String title, String content, String author) {
         this.deleted = deleted;
+        this.userId = userId;
         this.title = title;
         this.content = content;
         this.author = author;
     }
     //이것만 열어둬서, 테이블에 데이터 넣을려면 꼭 이곳을 통해야만 함..
-    public static Board of(String title, String content, String author) {
-        return new Board(false, title, content, author);
+    public static Board of(Long userId, String title, String content, String author) {
+        return new Board(false, userId, title, content, author);
     }
     public DefaultDto.CreateResDto toCreateResDto() {
         return DefaultDto.CreateResDto.builder().id(getId()).build();

@@ -3,6 +3,7 @@ package com.thc.spr202602.service.impl;
 import com.thc.spr202602.domain.User;
 import com.thc.spr202602.dto.UserDto;
 import com.thc.spr202602.dto.DefaultDto;
+import com.thc.spr202602.mapper.UserMapper;
 import com.thc.spr202602.repository.UserRepository;
 import com.thc.spr202602.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     final UserRepository userRepository;
+    final UserMapper userMapper;
 
     @Override
     public DefaultDto.CreateResDto login(UserDto.CreateReqDto param) {
@@ -70,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public UserDto.DetailResDto detail(DefaultDto.DetailReqDto param) {
-        User user = userRepository.findById(param.getId())
+        /*User user = userRepository.findById(param.getId())
                 .orElseThrow(() -> new RuntimeException("no data"));
         UserDto.DetailResDto res = UserDto.DetailResDto.builder()
                 .id(user.getId())
@@ -85,14 +87,24 @@ public class UserServiceImpl implements UserService {
 
         if(res.getDeleted()){
             return UserDto.DetailResDto.builder().id(user.getId()).deleted(true).build();
+        }*/
+        UserDto.DetailResDto res = userMapper.detail(param.getId());
+        if(res.getDeleted()){
+            res.setUsername(null);
+            res.setName(null);
         }
         return res;
     }
     @Override
     public List<UserDto.DetailResDto> list(UserDto.ListReqDto param) {
-        System.out.println("name : " + param.getName());
+        /*System.out.println("name : " + param.getName());
         List<UserDto.DetailResDto> list = new ArrayList<>();
-        List<User> users = userRepository.findAll();
-        return list;
+        List<User> users = userRepository.findAll();*/
+        List<UserDto.DetailResDto> newlist = new ArrayList<>();
+        List<UserDto.DetailResDto> list = userMapper.list(param);
+        for(UserDto.DetailResDto each : list){
+            newlist.add(detail(DefaultDto.DetailReqDto.builder().id(each.getId()).build()));
+        }
+        return newlist;
     }
 }
