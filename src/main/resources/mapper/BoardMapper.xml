@@ -30,5 +30,20 @@
 		FROM board
 		<include refid="commonWhere"/>
 	</select>
+	<select id="listCount" parameterType="hashMap" resultType="Integer">
+		SELECT count(board.id)
+		FROM board
+		<include refid="commonWhere"/>
+	</select>
+	<select id="pagedList" parameterType="hashMap" resultType="com.thc.spr202602.dto.BoardDto$DetailResDto">
+		SELECT board.id
+		FROM board
+		<include refid="commonWhere"/>
+		<if test = "orderby != null and orderby =='id'">ORDER BY board.id </if>
+		<if test = "orderby != null and orderby =='title'">ORDER BY board.title </if>
+		<if test = "orderway != null and orderway =='ASC'"> ASC</if>
+		<if test = "orderway != null and orderway =='DESC'"> DESC</if>
+		LIMIT #{offset}, #{perpage}
+	</select>
 
 </mapper>

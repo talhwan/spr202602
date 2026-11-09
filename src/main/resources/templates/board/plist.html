@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+</head>
+<body>
+callpage : <input id="callpage" /> <br/>
+perpage : <input id="perpage" /> <br/>
+<select id="orderby">
+    <option value="id">시간 순</option>
+    <option value="title">제목 가나다 순</option>
+</select><br/>
+<select id="orderway">
+    <option value="DESC">역 순</option>
+    <option value="ASC">정 순</option>
+</select><br/>
+<select id="search_deleted">
+    <option value="false">일반</option>
+    <option value="true">삭제됨</option>
+</select>
+<input id="search_title" type="text" placeholder="제목 검색"/>
+<button onclick="list_board()">get list</button>
+총 글 : <span id="span_listsize">-</span><br/>
+<div id="div_list">
+</div>
+<div id="div_page"></div>
+<script>
+    $(function(){
+        list_board()
+    });
+    function listener_callpage(param_callpage) {
+        $("#callpage").val(param_callpage);
+        list_board();
+    }
+    function list_board() {
+        $.ajax({
+            url: '/api/board/pagedList',
+            method: 'GET',
+            data : {
+                deleted: $("#search_deleted").val()
+                , title: $("#search_title").val()
+                , callpage: $("#callpage").val()
+                , perpage: $("#perpage").val()
+                , orderby: $("#orderby").val()
+                , orderway: $("#orderway").val()
+            },
+            success: function (data, status, xhr) {
+                //alert("data : " + JSON.stringify(data));
+
+                let callpage = data["callpage"];
+                $("#callpage").val(callpage);
+                let perpage = data["perpage"];
+                $("#perpage").val(perpage);
+
+                let listsize = data["listsize"];
+                $("#span_listsize").text(listsize);
+
+                let pagesize = data["pagesize"];
+
+
+                $("#div_page").html("");
+                $("#div_page").append(
+                    "<a href='javascript:listener_callpage("+1+")'> << </a>"
+                );
+                for(let i=0;i<3;i++){
+                    let tempPage = callpage - 3 +  i;
+                    if(tempPage > 0){
+                        $("#div_page").append(
+                            "<a href='javascript:listener_callpage("+tempPage+")'> " + tempPage + "</a>"
+                        );
+                    }
+                }
+                $("#div_page").append(
+                    "<a style='color:red' href='javascript:listener_callpage("+callpage+")'> " + callpage + "</a>"
+                );
+                for(let i=0;i<3;i++){
+                    let tempPage = callpage + 1 +  i;
+                    if(tempPage <= pagesize){
+                        $("#div_page").append(
+                            "<a href='javascript:listener_callpage("+tempPage+")'> " + tempPage + "</a>"
+                        );
+                    }
+                }
+                $("#div_page").append(
+                    "<a href='javascript:listener_callpage("+pagesize+")'> >> </a>"
+                );
+
+
+                $("#div_list").html("");
+                let list = data["list"];
+                for(let each of list) {
+                    $("#div_list").append("<div>"+each["id"] + "//" + each["title"]+"</div>");
+                }
+            },
+            error: function (data, status, err) {
+            },
+            complete: function () {
+            }
+        });
+    }
+</script>
+</body>
+</html>

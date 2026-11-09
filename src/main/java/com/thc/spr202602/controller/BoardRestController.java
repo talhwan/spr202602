@@ -43,5 +43,9 @@ public class BoardRestController {
     public ResponseEntity<List<BoardDto.DetailResDto>> list(BoardDto.ListReqDto param){
         return ResponseEntity.ok(boardService.list(param));
     }
+    @GetMapping("/pagedList")
+    public ResponseEntity<BoardDto.PagedListResDto> pagedList(BoardDto.PagedListReqDto param){
+        return ResponseEntity.ok(boardService.pagedList(param));
+    }
 
 }

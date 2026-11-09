@@ -49,4 +49,57 @@ public class BoardServiceImpl implements BoardService {
         }
         return newlist;
     }
+    @Override
+    public BoardDto.PagedListResDto pagedList(BoardDto.PagedListReqDto param) {
+        int perpage = 10;
+        if(param.getPerpage() != null){
+            perpage = param.getPerpage();
+        }
+        if(perpage <= 0){
+            perpage = 10;
+        }
+        Integer listsize = boardMapper.listCount(param); //총 등록된 글 수..
+        Integer pagesize = listsize / perpage; // 12 / 5 => 2?!
+        if(listsize % perpage > 0){
+            pagesize++;
+        }
+        int callpage = 1;
+        if(param.getCallpage() != null){
+            callpage = param.getCallpage();
+        }
+        if(callpage <= 0){
+            callpage = 1;
+        }
+        if(callpage > pagesize){
+            callpage = pagesize;
+        }
+        int offset = (callpage - 1) * perpage;
+        param.setOffset(offset);
+        param.setPerpage(perpage);
+
+        String orderby = "id";
+        if(param.getOrderby() != null){
+            orderby = param.getOrderby();
+        }
+        String orderway = "DESC";
+        if(param.getOrderway() != null){
+            orderway = param.getOrderway();
+        }
+
+
+        List<BoardDto.DetailResDto> newlist = new ArrayList<>();
+        List<BoardDto.DetailResDto> list = boardMapper.pagedList(param);
+        for(BoardDto.DetailResDto each : list){
+            newlist.add(detail(DefaultDto.DetailReqDto.builder().id(each.getId()).build()));
+        }
+
+        BoardDto.PagedListResDto pagedlist = BoardDto.PagedListResDto.builder()
+                .callpage(callpage)
+                .perpage(perpage)
+                .listsize(listsize)
+                .pagesize(pagesize)
+                .list(newlist)
+                .build();
+        return pagedlist;
+    }
 }
