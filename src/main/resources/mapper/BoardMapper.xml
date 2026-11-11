@@ -46,4 +46,33 @@
 		LIMIT #{offset}, #{perpage}
 	</select>
 
+
+	<select id="scrollList" parameterType="hashMap" resultType="com.thc.spr202602.dto.BoardDto$DetailResDto">
+		SELECT board.id
+		FROM board
+		<include refid="commonWhere"/>
+
+		<if test = "orderby != null and orderby =='title'">
+			<if test = "orderway != null and orderway =='DESC'">
+				<if test = "mark != null and mark !=''">AND #{mark} > CONCAT(board.title, '_', board.id) </if>
+				ORDER BY board.title DESC
+			</if>
+			<if test = "orderway != null and orderway =='ASC'">
+				<if test = "mark != null and mark !=''">AND CONCAT(board.title, '_', board.id) > #{mark} </if>
+				ORDER BY board.title ASC
+			</if>
+		</if>
+		<if test = "orderby != null and orderby =='id'">
+			<if test = "orderway != null and orderway =='DESC'">
+				<if test = "cursor != null">AND #{cursor} > board.id</if>
+				ORDER BY board.id DESC
+			</if>
+			<if test = "orderway != null and orderway =='ASC'">
+				<if test = "cursor != null">AND board.id > #{cursor} </if>
+				ORDER BY board.id ASC
+			</if>
+		</if>
+		LIMIT 0, #{perpage}
+	</select>
+
 </mapper>

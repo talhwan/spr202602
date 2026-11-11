@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+</head>
+<body>
+perpage : <input id="perpage" value="3" onchange="sort()"/> <br/>
+<select id="orderby" onchange="sort()">
+    <option value="id">시간 순</option>
+    <option value="title">제목 가나다 순</option>
+</select><br/>
+<select id="orderway" onchange="sort()">
+    <option value="DESC">역 순</option>
+    <option value="ASC">정 순</option>
+</select><br/>
+<select id="search_deleted" onchange="sort()">
+    <option value="false">일반</option>
+    <option value="true">삭제됨</option>
+</select>
+<input id="search_title" type="text" placeholder="제목 검색" onchange="sort()"/>
+
+<div id="div_list">
+</div>
+<button onclick="list_board()">get more list</button>
+<script>
+    $(function(){
+        list_board();
+    });
+    function sort() {
+        $("#div_list").html("");
+        list_board();
+    }
+    function list_board() {
+        let cursor = null;
+        let input_id = $(".input_id");
+        if(input_id.length > 0){
+            cursor = $(input_id[input_id.length-1]).val();
+        }
+        $.ajax({
+            url: '/api/board/scrollList',
+            method: 'GET',
+            data : {
+                deleted: $("#search_deleted").val()
+                , title: $("#search_title").val()
+                , perpage: $("#perpage").val()
+                , orderby: $("#orderby").val()
+                , orderway: $("#orderway").val()
+                , cursor : cursor
+            },
+            success: function (data, status, xhr) {
+                let list = data;
+                for(let each of list) {
+                    $("#div_list").append("<div>"+each["id"] + "//" + each["title"]+"<input type='hidden1' class='input_id' value='"+each["id"]+"' /></div>");
+                }
+            },
+            error: function (data, status, err) {
+            },
+            complete: function () {
+            }
+        });
+    }
+</script>
+</body>
+</html>

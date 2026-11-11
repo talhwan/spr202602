@@ -44,8 +44,12 @@ public class BoardRestController {
         return ResponseEntity.ok(boardService.list(param));
     }
     @GetMapping("/pagedList")
-    public ResponseEntity<BoardDto.PagedListResDto> pagedList(BoardDto.PagedListReqDto param){
+    public ResponseEntity<DefaultDto.PagedListResDto> pagedList(BoardDto.PagedListReqDto param){
         return ResponseEntity.ok(boardService.pagedList(param));
+    }
+    @GetMapping("/scrollList")
+    public ResponseEntity<List<BoardDto.DetailResDto>> scrollList(BoardDto.ScrollListReqDto param){
+        return ResponseEntity.ok(boardService.scrollList(param));
     }
 
 }

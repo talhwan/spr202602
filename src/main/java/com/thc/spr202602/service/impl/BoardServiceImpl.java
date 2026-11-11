@@ -40,66 +40,40 @@ public class BoardServiceImpl implements BoardService {
         BoardDto.DetailResDto res = boardMapper.detail(param.getId());
         return res;
     }
-    @Override
-    public List<BoardDto.DetailResDto> list(BoardDto.ListReqDto param) {
+    public List<BoardDto.DetailResDto> detailList(List<BoardDto.DetailResDto> list) {
         List<BoardDto.DetailResDto> newlist = new ArrayList<>();
-        List<BoardDto.DetailResDto> list = boardMapper.list(param);
         for(BoardDto.DetailResDto each : list){
             newlist.add(detail(DefaultDto.DetailReqDto.builder().id(each.getId()).build()));
         }
         return newlist;
     }
     @Override
-    public BoardDto.PagedListResDto pagedList(BoardDto.PagedListReqDto param) {
+    public List<BoardDto.DetailResDto> list(BoardDto.ListReqDto param) {
+        return detailList(boardMapper.list(param));
+    }
+    @Override
+    public DefaultDto.PagedListResDto pagedList(BoardDto.PagedListReqDto param) {
+        DefaultDto.PagedListResDto res = param.init(boardMapper.listCount(param));
+        res.setList(detailList(boardMapper.pagedList(param)));
+        return res;
+    }
+
+    @Override
+    public List<BoardDto.DetailResDto> scrollList(BoardDto.ScrollListReqDto param) {
         int perpage = 10;
         if(param.getPerpage() != null){
             perpage = param.getPerpage();
         }
-        if(perpage <= 0){
-            perpage = 10;
-        }
-        Integer listsize = boardMapper.listCount(param); //총 등록된 글 수..
-        Integer pagesize = listsize / perpage; // 12 / 5 => 2?!
-        if(listsize % perpage > 0){
-            pagesize++;
-        }
-        int callpage = 1;
-        if(param.getCallpage() != null){
-            callpage = param.getCallpage();
-        }
-        if(callpage <= 0){
-            callpage = 1;
-        }
-        if(callpage > pagesize){
-            callpage = pagesize;
-        }
-        int offset = (callpage - 1) * perpage;
-        param.setOffset(offset);
         param.setPerpage(perpage);
 
-        String orderby = "id";
-        if(param.getOrderby() != null){
-            orderby = param.getOrderby();
-        }
-        String orderway = "DESC";
-        if(param.getOrderway() != null){
-            orderway = param.getOrderway();
-        }
-
-
-        List<BoardDto.DetailResDto> newlist = new ArrayList<>();
-        List<BoardDto.DetailResDto> list = boardMapper.pagedList(param);
-        for(BoardDto.DetailResDto each : list){
-            newlist.add(detail(DefaultDto.DetailReqDto.builder().id(each.getId()).build()));
+        if(param.getOrderby() != null && !param.getOrderby().equals("id")){
+            if(param.getCursor() != null){
+                Board board = boardRepository.findById(param.getCursor()).orElseThrow(() -> new RuntimeException("no data"));
+                String mark = board.getTitle() + "_" + board.getId();
+                param.setMark(mark);
+            }
         }
 
-        BoardDto.PagedListResDto pagedlist = BoardDto.PagedListResDto.builder()
-                .callpage(callpage)
-                .perpage(perpage)
-                .listsize(listsize)
-                .pagesize(pagesize)
-                .list(newlist)
-                .build();
-        return pagedlist;
+        return detailList(boardMapper.scrollList(param));
     }
 }
